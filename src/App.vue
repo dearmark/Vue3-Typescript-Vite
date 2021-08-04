@@ -5,7 +5,7 @@
   </div>
   <div id="event-handling">
     <p>{{ message }}</p>
-    <button v-on:click="reverseMessage">反转 Message</button>
+    <button v-on:click="deb">反转 Message</button>
   </div>
   <div id="two-way-binding">
     <p>{{ message }}</p>
@@ -14,103 +14,20 @@
   <div id="conditional-rendering">
     <span v-if="seen">现在你看到我了</span>
   </div>
-  <div id="list-rendering">
-    <ol>
-      <li v-for="todo in todos">{{ todo.text }}</li>
-    </ol>
-  </div>
+  
 </template>
-<!-- Options API -->
-<!-- <script lang="ts">
-import { ref, defineComponent } from 'vue'
-export default defineComponent({
-  data() {
-    return {
-      message: '一二三四!'
-    }
-  },
-  methods: {
-    reverseMessage() {
-      this.message = this.message
-        .split('')
-        .reverse()
-        .join('')
-    }
-  }
-})
-</script> -->
-<!-- Composition API 版本1-->
-<!-- <script lang="ts">
-import { reactive,ref, defineComponent } from 'vue'
-export default defineComponent({
-  setup(props, context) {
-
-    const message = ref('一二三四!')
-    // var message:string = '一二三四!!';
-    //const state = reactive({message})
- 
-    
-    function reverseMessage() {
-      message.value = message.value
-        .split('')
-        .reverse()
-        .join('');
-        console.log(message)
-
-    }
-    
-    return {
-      message,
-      reverseMessage
-    }
-  }
-
-})
-</script> -->
-
-<!-- Composition API 版本2-->
-<!-- <script lang="ts">
-import { reactive, ref, toRefs, defineComponent } from 'vue'
-export default defineComponent({
-  setup() {
-
-    const state = reactive({
-      message: '一二三四!'
-    })
-
-
-    function reverseMessage() {
-      state.message = state.message
-        .split('')
-        .reverse()
-        .join('');
-      console.log(state.message);
-
-    }
-
-    return {
-      ...toRefs(state),
-      reverseMessage
-    }
-  }
-
-})
-</script> -->
 <!-- Composition API 版本3-->
 <script setup lang="ts" >
-import { reactive, ref, watchEffect ,toRefs, defineComponent } from 'vue'
-// var counter = 0;
-// const Counter = ref(counter);
-// watchEffect(() => {
-
-// });
+import { reactive, ref, watchEffect, toRefs, defineComponent, onMounted, onUnmounted } from 'vue'
+import _ from 'lodash'
+const deb = _.debounce(reverseMessage, 500);
 let counter = ref(0);
 let interval = setInterval(() => {
   if (counter.value === 60) {
     clearInterval(interval)
   } else {
-    counter.value ++
-    console.log(counter.value )
+    counter.value++
+    //console.log(counter.value)
   }
 }, 1000)
 const message = ref('一二三四!');
@@ -122,14 +39,31 @@ const todos = ref(
     { text: 'Build something awesome' }
   ]
 )
+// let debouncedClick
 function reverseMessage() {
   message.value = message.value
     .split('')
     .reverse()
     .join('');
-  // console.log(message)
+  //console.log(message)
+
+  // _.debounce(function () {
+  //   message.value = message.value
+  //     .split('')
+  //     .reverse()
+  //     .join('');
+  // }, 500)
+
+  //console.log(message)
 
 }
+function debouncedClick() {
+  _.debounce(reverseMessage,500)
+}
+onMounted(() => {
+  // 用 Lodash 的防抖函数
+  //let debouncedClick = _.debounce(reverseMessage, 10)
+})
 </script>
 
 <style>
