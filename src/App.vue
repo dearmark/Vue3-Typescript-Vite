@@ -1,69 +1,55 @@
 <template>
-  <div id="counter">Counter: {{ counter }}</div>
-  <div id="bind-attribute">
-    <span v-bind:title="message">鼠标悬停几秒钟查看此处动态绑定的提示信息！</span>
+  <div id="computed-basics">
+    <p>Has published books:</p>
+    <span>{{ author.books.length > 0 ? 'Yes' : 'No' }}</span>
   </div>
-  <div id="event-handling">
-    <p>{{ message }}</p>
-    <button v-on:click="deb">反转 Message</button>
+  <div id="computed-basics">
+    <p>Has published books:</p>
+    <span>{{ publishedBooksMessage }}</span>
   </div>
-  <div id="two-way-binding">
-    <p>{{ message }}</p>
-    <input v-model="message" />
+  <div id="watch-example">
+    <p>
+      Ask a yes/no question:
+      <input v-model="question" />
+    </p>
+    <p>{{ answer }}</p>
+    <img :src="imgsrc" />
   </div>
-  <div id="conditional-rendering">
-    <span v-if="seen">现在你看到我了</span>
-  </div>
-  
 </template>
 <!-- Composition API 版本3-->
 <script setup lang="ts" >
-import { reactive, ref, watchEffect, toRefs, defineComponent, onMounted, onUnmounted } from 'vue'
-import _ from 'lodash'
-const deb = _.debounce(reverseMessage, 500);
-let counter = ref(0);
-let interval = setInterval(() => {
-  if (counter.value === 60) {
-    clearInterval(interval)
-  } else {
-    counter.value++
-    //console.log(counter.value)
-  }
-}, 1000)
-const message = ref('一二三四!');
-const seen = ref(true);
-const todos = ref(
-  [
-    { text: 'Learn JavaScript' },
-    { text: 'Learn Vue' },
-    { text: 'Build something awesome' }
+import { reactive, ref, computed, watch } from 'vue'
+import axios from 'axios'
+const author = ref({
+  name: 'John Doe',
+  books: [
+    'Vue 2 - Advanced Guide',
+    'Vue 3 - Basic Guide',
+    'Vue 4 - The Mystery'
   ]
-)
-// let debouncedClick
-function reverseMessage() {
-  message.value = message.value
-    .split('')
-    .reverse()
-    .join('');
-  //console.log(message)
-
-  // _.debounce(function () {
-  //   message.value = message.value
-  //     .split('')
-  //     .reverse()
-  //     .join('');
-  // }, 500)
-
-  //console.log(message)
-
-}
-function debouncedClick() {
-  _.debounce(reverseMessage,500)
-}
-onMounted(() => {
-  // 用 Lodash 的防抖函数
-  //let debouncedClick = _.debounce(reverseMessage, 10)
 })
+// 计算属性
+const publishedBooksMessage = computed(() => author.value.books.length > 3 ? 'Yes' : 'No')
+const question = ref('')
+const imgsrc = ref('')
+const answer = ref('Questions usually contain a question mark. ;')
+watch(question, (newValue, oldValue) => {
+  if (newValue.indexOf('?') > -1) {
+    getAnswer()
+  }
+});
+function getAnswer() {
+  answer.value = 'Thinking...'
+  axios
+    .get('https://yesno.wtf/api')
+    .then(response => {
+      answer.value = response.data.answer
+      imgsrc.value = response.data.image
+    })
+    .catch(error => {
+      answer.value = 'Error! Could not reach the API. ' + error
+    })
+}
 </script>
 
 <style>
