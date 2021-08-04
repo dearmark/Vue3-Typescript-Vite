@@ -1,55 +1,29 @@
 <template>
-  <div id="computed-basics">
-    <p>Has published books:</p>
-    <span>{{ author.books.length > 0 ? 'Yes' : 'No' }}</span>
-  </div>
-  <div id="computed-basics">
-    <p>Has published books:</p>
-    <span>{{ publishedBooksMessage }}</span>
-  </div>
-  <div id="watch-example">
-    <p>
-      Ask a yes/no question:
-      <input v-model="question" />
-    </p>
-    <p>{{ answer }}</p>
-    <img :src="imgsrc" />
-  </div>
+  <div class="static" :class="{ active: isActive, 'text-danger': hasError }">Class 与 Style 绑定</div>
+  <div :class="classObject">Class 与 Style 绑定2</div>
+  <div :style="{ display: ['-webkit-box', '-ms-flexbox', 'flex'] }">多重值</div>
+  <div :class="[activeClass, errorClass]">数组语法</div>
+  <div :class="[isActive ? activeClass : '', errorClass]">数组语法</div>
+  <div :class="[{ active: isActive }, errorClass]">数组语法2</div>
+  <div :style="{ color: activeColor, fontSize: fontSize + 'px' }">对象语法</div>
+  <div :style="styleObject">对象语法2</div>
 </template>
-<!-- Composition API 版本3-->
 <script setup lang="ts" >
-import { reactive, ref, computed, watch } from 'vue'
-import axios from 'axios'
-const author = ref({
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
-})
-// 计算属性
-const publishedBooksMessage = computed(() => author.value.books.length > 3 ? 'Yes' : 'No')
-const question = ref('')
-const imgsrc = ref('')
-const answer = ref('Questions usually contain a question mark. ;')
-watch(question, (newValue, oldValue) => {
-  if (newValue.indexOf('?') > -1) {
-    getAnswer()
-  }
-});
-function getAnswer() {
-  answer.value = 'Thinking...'
-  axios
-    .get('https://yesno.wtf/api')
-    .then(response => {
-      answer.value = response.data.answer
-      imgsrc.value = response.data.image
-    })
-    .catch(error => {
-      answer.value = 'Error! Could not reach the API. ' + error
-    })
+const isActive = true
+const hasError = false
+const classObject = {
+  active: true,
+  'text-danger': true
 }
+const activeClass = 'active'
+const errorClass = 'text-danger'
+const activeColor = 'red'
+const fontSize = 30
+const styleObject = {
+  color: 'red',
+  fontSize: '13px'
+}
+
 </script>
 
 <style>
