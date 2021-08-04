@@ -1,18 +1,14 @@
 <template>
-  <h1 v-if="awesome">Vue is awesome!</h1>
-  <h1 v-else>Oh no 😢</h1>
-
-  <div v-if="Math.random() > 0.5">Now you see me</div>
-  <div v-else>Now you don't</div>
-  <h1 v-show="ok">Hello!</h1>
-  一般来说，v-if 有更高的切换开销，而 v-show 有更高的初始渲染开销。因此，如果需要非常频繁地切换，则使用 v-show 较好；如果在运行时条件很少改变，则使用 v-if 较好。
-
+  <ul id="array-rendering" class="demo">
+    <li v-for="item in items" :key="item.message">{{ item.message }}</li>
+  </ul>
+  <ul id="array-with-index">
+    <li v-for="(item, index) in items">{{ parentMessage }} - {{ index }} - {{ item.message }}</li>
+  </ul>
 </template>
 <script setup lang="ts" >
-const awesome = false
-const ok = false
-
-
+const items = [{ message: 'Foo' }, { message: 'Bar' }]
+const parentMessage = 'Parent'
 </script>
 
 <style>
