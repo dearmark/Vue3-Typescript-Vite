@@ -13,3 +13,14 @@ import App from './App.vue'
 // })
 
 createApp(App).mount('#app')
+// App.component('todo-item', {
+//     template: `
+//       <li>
+//         {{ title }}
+//         <button @click="$emit('remove')">Remove</button>
+//       </li>
+//     `,
+//     props: ['title'],
+//     emits: ['remove']
+// })
+
