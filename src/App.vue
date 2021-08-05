@@ -1,90 +1,41 @@
 <template>
-  <ul id="array-rendering" class="demo">
-    <li v-for="item in items" :key="item.message">{{ item.message }}</li>
-  </ul>
-  <ul id="array-with-index">
-    <li v-for="(item, index) in items">{{ parentMessage }} - {{ index }} - {{ item.message }}</li>
-  </ul>
-  <ul id="v-for-object" class="demo">
-    <li v-for="value in myObject">{{ value }}</li>
-  </ul>
-  <li v-for="(value, name) in myObject">{{ name }}: {{ value }}</li>
-
-  <li v-for="(value, name, index) in myObject">{{ index }}. {{ name }}: {{ value }}</li>
-
-  <li v-for="n in evenNumbers" :key="n">{{ n }}</li>
-
-  <ul v-for="numbers in sets">
-    <li v-for="n in even(numbers)" :key="n">{{ n }}</li>
-  </ul>
-
-  <div id="range" class="demo">
-    <span v-for="n in 10" :key="n">{{ n }}</span>
+  <div id="basic-event">
+    <button @click="counter += 1">Add 1</button>
+    <p>The button above has been clicked {{ counter }} times.</p>
   </div>
-
-  <!-- <li v-for="todo in todos" v-if="!todo.isComplete">{{ todo.name }}</li> -->
-  <template v-for="todo in todos2" :key="todo.name">
-    <li v-if="!todo.isComplete">{{ todo.name }}</li>
-  </template>
-
-  <div id="todo-list-example">
-    <form v-on:submit.prevent="addNewTodo">
-      <label for="new-todo">Add a todo</label>
-      <input v-model="newTodoText" id="new-todo" placeholder="E.g. Feed the cat" />
-      <button>Add</button>
-    </form>
-    <ul>
-      <todo-item
-        v-for="(todo, index) in todos"
-        :key="todo.id"
-        :title="todo.title"
-        @remove="todos.splice(index, 1)"
-      ></todo-item>
-    </ul>
+  <div id="event-with-method">
+    <!-- `greet` 是在下面定义的方法名 -->
+    <button @click="greet">Greet</button>
   </div>
+  <div id="inline-handler">
+    <button @click="say('hi')">Say hi</button>
+    <button @click="say('what')">Say what</button>
+  </div>
+  <button @click="warn('Form cannot be submitted yet.', $event)">Submit</button>
 </template>
 <script setup lang="ts" >
 import { reactive, ref, computed, watch } from 'vue'
-const items = [{ message: 'Foo' }, { message: 'Bar' }]
-const parentMessage = 'Parent'
-const myObject = {
-  title: 'How to do lists in Vue',
-  author: 'Jane Doe',
-  publishedAt: '2016-04-10'
-}
-const numbers = [1, 2, 3, 4, 5]
-const evenNumbers = computed(() => numbers.filter(number => number % 2 === 1))
-const sets = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]]
-
-function even(numbers: number[]) {
-  return numbers.filter(number => number % 2 === 0)
-}
-const todos2 = [{ name: 'Foo', isComplete: false }, { name: 'Bar', isComplete: false }, { name: 'Bar2', isComplete: false }]
-
-let newTodoText = ref('SSSS')
-let nextTodoId = ref(4)
-let todos = [
-  {
-    id: 1,
-    title: 'Do the dishes'
-  },
-  {
-    id: 2,
-    title: 'Take out the trash'
-  },
-  {
-    id: 3,
-    title: 'Mow the lawn'
+const counter = ref(0)
+const name = ref('Vue.js')
+function greet(event: PointerEvent) {
+  // `methods` 内部的 `this` 指向当前活动实例
+  alert('Hello ' + name.value + '!')
+  // `event` 是原生 DOM event
+  if (event) {
+    alert(event.target.tagName)
+    //console.log(event)
   }
-]
-function addNewTodo() {
-  todos.push({
-    id: nextTodoId.value++,
-    title: newTodoText.value
-  })
-  newTodoText.value = ''
 }
-
+function say(message: string) {
+  alert(message)
+}
+function warn(message: string, event) {
+  // 现在可以访问到原生事件
+  if (event) {
+    event.preventDefault()
+  }
+  alert(message)
+}
 </script>
 
 <style>
