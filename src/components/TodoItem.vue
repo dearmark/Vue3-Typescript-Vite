@@ -8,7 +8,7 @@
 const props = defineProps({
     title: String,
 })
-const emit = defineEmits(['remove'])
+// const emit = defineEmits(['remove'])
 // declare const emit: {
 //     remove
 // }
