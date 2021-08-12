@@ -5,6 +5,7 @@
     </li>
 </template>
 <script setup=’props‘  lang="ts" >
+// import { defineProps, defineEmits } from 'vue'
 // declare const props: {
 //     title:{
 //       type: String,

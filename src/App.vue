@@ -20,10 +20,11 @@
   <div id="components-demo">
     <ButtonCounter :count="22"></ButtonCounter>
   </div>
-  <div id="blog-post-demo" class="demo">
+  <!-- <div id="blog-post-demo" class="demo">
     <blogpost title="My journey with Vue"></blogpost>
     <blogpost title="Blogging with Vue"></blogpost>
     <blogpost title="Why Vue is so fun"></blogpost>
+  </div> -->
     <!-- 传递值 -->
     <!-- <div id="blog-posts-demo">
       <blogpost
@@ -36,16 +37,16 @@
 
     <div id="blog-posts-events-demo" class="demo">
       <div :style="{ fontSize: postFontSize + 'em' }">
-        <blogpost
+        <BlogPost
           v-for="post in posts"
           :key="post.id"
           :title="post.title"
           @enlarge-text="postFontSize += 1"
           @zoom-out="postFontSize -= 1"
-        ></blogpost>
+        ></BlogPost>
       </div>
     </div>
-  </div>
+  
   <!-- <div id="todo-list-example" class="demo">
     <form v-on:submit.prevent="addNewTodo">
       <label for="new-todo">Add a todo</label>
@@ -61,13 +62,19 @@
       ></TodoItem2>
     </ul>
   </div>-->
+  <div id="slots-demo" class="demo">
+  <alertbox>
+    Something bad happened.
+  </alertbox>
+</div>
 </template>
 <script setup lang="ts" >
 import { reactive, ref, computed, watch } from 'vue'
 import TodoItem from './components/TodoItem.vue'
-import TodoItem2 from './components/TodoItem2.vue'
-import blogpost from './components/blog-post.vue'
+// import TodoItem2 from './components/TodoItem2.vue'
+import BlogPost from './components/BlogPost.vue'
 import ButtonCounter from './components/ButtonCounter.vue'
+import alertbox from './components/AlertBox.vue'
 const posts = [
   { id: 1, title: 'My journey with Vue2' },
   { id: 2, title: 'Blogging with Vue2' },
@@ -113,6 +120,7 @@ function addNewTodo() {
 </script>
 
 <style>
+
 .demo {
   font-family: sans-serif;
   border: 1px solid #eee;
@@ -123,4 +131,5 @@ function addNewTodo() {
   user-select: none;
   overflow-x: auto;
 }
+
 </style>

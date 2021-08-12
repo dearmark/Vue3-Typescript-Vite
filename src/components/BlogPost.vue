@@ -3,10 +3,10 @@
     <button @click="$emit('enlargeText')">Enlarge text</button>
     <button @click="$emit('zoomOut')">zoomOut text</button>
 </template>
-<script setup=’props‘  lang="ts" >
+<script setup lang="ts" >
 const props = defineProps({
-    title: String,
+    title: String
 })
- const emit = defineEmits(['enlargeText','zoomOut'])
+const emit = defineEmits(['enlargeText', 'zoomOut'])
 
 </script>
