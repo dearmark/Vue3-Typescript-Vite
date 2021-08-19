@@ -14,39 +14,39 @@
       ></TodoItem>
     </ul>
   </div>
-  <div id="components-demo">
+  <!-- <div id="components-demo">
     <ButtonCounter :count="count"></ButtonCounter>
   </div>
   <div id="components-demo">
     <ButtonCounter :count="22"></ButtonCounter>
-  </div>
+  </div> -->
   <!-- <div id="blog-post-demo" class="demo">
     <blogpost title="My journey with Vue"></blogpost>
     <blogpost title="Blogging with Vue"></blogpost>
     <blogpost title="Why Vue is so fun"></blogpost>
-  </div> -->
-    <!-- 传递值 -->
-    <!-- <div id="blog-posts-demo">
+  </div>-->
+  <!-- 传递值 -->
+  <!-- <div id="blog-posts-demo">
       <blogpost
         v-for="post in posts"
         :key="post.id"
         :title="post.title"
         @enlarge-text="postFontSize += 0.1"
       ></blogpost>
-    </div>-->
+  </div>-->
 
-    <div id="blog-posts-events-demo" class="demo">
-      <div :style="{ fontSize: postFontSize + 'em' }">
-        <BlogPost
-          v-for="post in posts"
-          :key="post.id"
-          :title="post.title"
-          @enlarge-text="postFontSize += 1"
-          @zoom-out="postFontSize -= 1"
-        ></BlogPost>
-      </div>
+  <div id="blog-posts-events-demo" class="demo">
+    <div :style="{ fontSize: postFontSize + 'em' }">
+      <BlogPost
+        v-for="post in posts"
+        :key="post.id"
+        :title="post.title"
+        @enlarge-text="postFontSize += 1"
+        @zoom-out="postFontSize -= 1"
+      ></BlogPost>
     </div>
-  
+  </div>
+
   <!-- <div id="todo-list-example" class="demo">
     <form v-on:submit.prevent="addNewTodo">
       <label for="new-todo">Add a todo</label>
@@ -63,18 +63,28 @@
     </ul>
   </div>-->
   <div id="slots-demo" class="demo">
-  <alertbox>
-    Something bad happened.
-  </alertbox>
-</div>
+    <alertbox>Something bad happened.</alertbox>
+  </div>
+  <div id="dynamic-component-demo" class="demo">
+    <button
+      v-for="tab in tabs"
+      v-bind:key="tab"
+      v-bind:class="['tab-button', { active: currentTab === tab }]"
+      v-on:click="currentTab = tab"
+    >{{ tab }}</button>
+
+    <component v-bind:is="currentTabComponent" class="tab"></component>
+  </div>
 </template>
 <script setup lang="ts" >
-import { reactive, ref, computed, watch } from 'vue'
+import { reactive, ref, computed, watch, defineCustomElement } from 'vue'
 import TodoItem from './components/TodoItem.vue'
 // import TodoItem2 from './components/TodoItem2.vue'
 import BlogPost from './components/BlogPost.vue'
-import ButtonCounter from './components/ButtonCounter.vue'
+// import ButtonCounter from './components/ButtonCounter.vue'
 import alertbox from './components/AlertBox.vue'
+
+
 const posts = [
   { id: 1, title: 'My journey with Vue2' },
   { id: 2, title: 'Blogging with Vue2' },
@@ -117,10 +127,31 @@ function addNewTodo() {
 // })
 // customElements.define('blog-gost2', Bloggost2)
 
+const MyVueElement = defineCustomElement({
+  // normal Vue component options here
+  template: `<div class="demo-tab">Home component</div>`
+})
+customElements.define('tab-home', MyVueElement)
+
+const MyVueElement2 = defineCustomElement({
+  // normal Vue component options here
+  template: `<div class="demo-tab">Posts component</div>`
+})
+customElements.define('tab-posts', MyVueElement2)
+
+const MyVueElement3 = defineCustomElement({
+  // normal Vue component options here
+  template: `<div class="demo-tab">Archive component</div>`
+})
+customElements.define('tab-archive', MyVueElement3)
+
+const tabs = ['Home', 'Posts', 'Archive']
+const currentTab = ref('Home')
+const currentTabComponent = computed(() => 'tab-' + currentTab.value.toLowerCase())
+
 </script>
 
 <style>
-
 .demo {
   font-family: sans-serif;
   border: 1px solid #eee;
@@ -132,4 +163,24 @@ function addNewTodo() {
   overflow-x: auto;
 }
 
+.tab-button {
+  padding: 6px 10px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background: #f0f0f0;
+  margin-bottom: -1px;
+  margin-right: -1px;
+}
+.tab-button:hover {
+  background: #e0e0e0;
+}
+.tab-button.active {
+  background: #e0e0e0;
+}
+.demo-tab {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
 </style>
