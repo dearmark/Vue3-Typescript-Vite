@@ -1,68 +1,7 @@
 <template>
-  <div id="todo-list-example" class="demo">
-    <form v-on:submit.prevent="addNewTodo">
-      <label for="new-todo">Add a todo</label>
-      <input v-model="newTodoText" id="new-todo" placeholder="E.g. Feed the cat" />
-      <button>Add</button>
-    </form>
-    <ul>
-      <TodoItem
-        v-for="(todo, index) in todos"
-        v-bind:key="todo.id"
-        v-bind:title="todo.title"
-        v-on:remove="todos.splice(index, 1)"
-      ></TodoItem>
-    </ul>
-  </div>
-  <!-- <div id="components-demo">
-    <ButtonCounter :count="count"></ButtonCounter>
-  </div>
-  <div id="components-demo">
-    <ButtonCounter :count="22"></ButtonCounter>
-  </div> -->
-  <!-- <div id="blog-post-demo" class="demo">
-    <blogpost title="My journey with Vue"></blogpost>
-    <blogpost title="Blogging with Vue"></blogpost>
-    <blogpost title="Why Vue is so fun"></blogpost>
-  </div>-->
-  <!-- 传递值 -->
-  <!-- <div id="blog-posts-demo">
-      <blogpost
-        v-for="post in posts"
-        :key="post.id"
-        :title="post.title"
-        @enlarge-text="postFontSize += 0.1"
-      ></blogpost>
-  </div>-->
 
-  <div id="blog-posts-events-demo" class="demo">
-    <div :style="{ fontSize: postFontSize + 'em' }">
-      <BlogPost
-        v-for="post in posts"
-        :key="post.id"
-        :title="post.title"
-        @enlarge-text="postFontSize += 1"
-        @zoom-out="postFontSize -= 1"
-      ></BlogPost>
-    </div>
-  </div>
 
-  <!-- <div id="todo-list-example" class="demo">
-    <form v-on:submit.prevent="addNewTodo">
-      <label for="new-todo">Add a todo</label>
-      <input v-model="newTodoText" id="new-todo" placeholder="E.g. Feed the cat" />
-      <button>Add</button>
-    </form>
-    <ul>
-      <TodoItem2
-        v-for="(todo, index) in todos"
-        v-bind:key="todo.id"
-        v-bind:title="todo.title"
-        v-on:remove="todos.splice(index, 1)"
-      ></TodoItem2>
-    </ul>
-  </div>-->
-  <div id="slots-demo" class="demo">
+  <!-- <div id="slots-demo" class="demo">
     <alertbox>Something bad happened.</alertbox>
   </div>
   <div id="dynamic-component-demo" class="demo">
@@ -74,7 +13,33 @@
     >{{ tab }}</button>
 
     <component v-bind:is="currentTabComponent" class="tab"></component>
+  </div> -->
+
+  <div id="dynamic-component-demo" class="demo">
+  <button
+     v-for="tab in tabs"
+     :key="tab"
+     :class="['tab-button', { active: currentTab === tab }]"
+     @click="currentTab = tab"
+   >
+    {{ tab }}
+  </button>
+
+<!-- Inactive components will be cached! -->
+<keep-alive>
+  <component :is="currentTabComponent">     </component>
+</keep-alive>
+</div>
+
+
+<div id="demo">
+  Push this button to do something you shouldn't be doing:<br>
+
+  <div :class="{ shake: noActivated }">
+    <button @click="noActivated = true">Click me</button>
+    <span v-if="noActivated">Oh no!</span>
   </div>
+</div>
 </template>
 <script setup lang="ts" >
 import { reactive, ref, computed, watch, defineCustomElement } from 'vue'
@@ -83,6 +48,7 @@ import TodoItem from './components/TodoItem.vue'
 import BlogPost from './components/BlogPost.vue'
 // import ButtonCounter from './components/ButtonCounter.vue'
 import alertbox from './components/AlertBox.vue'
+import TabPosts from './components/TabPosts.vue'
 
 
 const posts = [
@@ -92,6 +58,7 @@ const posts = [
 ]
 const count = ref(11)
 const postFontSize = ref(1)
+const noActivated= ref(false)
 let newTodoText = ref('SSSS')
 let nextTodoId = ref(11)
 let todos = reactive([
@@ -127,23 +94,23 @@ function addNewTodo() {
 // })
 // customElements.define('blog-gost2', Bloggost2)
 
-const MyVueElement = defineCustomElement({
-  // normal Vue component options here
-  template: `<div class="demo-tab">Home component</div>`
-})
-customElements.define('tab-home', MyVueElement)
+// const MyVueElement = defineCustomElement({
+//   // normal Vue component options here
+//   template: `<div class="demo-tab">Home component</div>`
+// })
+// customElements.define('tab-home', MyVueElement)
 
-const MyVueElement2 = defineCustomElement({
-  // normal Vue component options here
-  template: `<div class="demo-tab">Posts component</div>`
-})
-customElements.define('tab-posts', MyVueElement2)
+// const MyVueElement2 = defineCustomElement({
+//   // normal Vue component options here
+//   template: `<div class="demo-tab">Posts component</div>`
+// })
+// customElements.define('tab-posts', MyVueElement2)
 
-const MyVueElement3 = defineCustomElement({
-  // normal Vue component options here
-  template: `<div class="demo-tab">Archive component</div>`
-})
-customElements.define('tab-archive', MyVueElement3)
+// const MyVueElement3 = defineCustomElement({
+//   // normal Vue component options here
+//   template: `<div class="demo-tab">Archive component</div>`
+// })
+// customElements.define('tab-archive', MyVueElement3)
 
 const tabs = ['Home', 'Posts', 'Archive']
 const currentTab = ref('Home')
@@ -182,5 +149,57 @@ const currentTabComponent = computed(() => 'tab-' + currentTab.value.toLowerCase
 .demo-tab {
   border: 1px solid #ccc;
   padding: 10px;
+}
+</style>
+<style lang="scss">
+body {
+  margin: 30px;
+}
+
+button {
+  background: #d93419;
+  border-radius: 4px;
+  display: inline-block;
+  border: none;
+  padding: 0.75rem 1rem;
+  margin: 20px 10px 0 0;
+  text-decoration: none;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+button:focus {
+  outline: 1px dashed #fff;
+  outline-offset: -3px;
+}
+
+.shake {
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }
 </style>
