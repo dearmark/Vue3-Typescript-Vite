@@ -1,37 +1,33 @@
 <template>
-  <div id="demo">
-    <div
-      @mousemove="xCoordinate"
-      :style="{ backgroundColor: `hsl(${x}, 80%, 50%)` }"
-      class="movearea"
-    >
-      <h3>Move your mouse across the screen...</h3>
-      <p>x: {{ x }}</p>
-    </div>
-  </div>
+  <my-vue-element></my-vue-element>
 </template>
 <script setup lang="ts" >
 import { reactive, ref, computed, watch, defineCustomElement } from 'vue'
-const x = ref(0)
-function xCoordinate(e: MouseEvent) {
-  x.value = e.clientX;
-}
+const MyVueElement = defineCustomElement({
+  // normal Vue component options here
+  props: {},
+  emits: {},
+  template: `<H2>這裡是 Wibibi 標題二</H2>`,
+
+  // defineCustomElement only: CSS to be injected into shadow root
+  styles: [`/* inlined css */`]
+})
+
+// Register the custom element.
+// After registration, all `<my-vue-element>` tags
+// on the page will be upgraded.
+customElements.define('my-vue-element', MyVueElement)
+
+// You can also programmatically instantiate the element:
+// (can only be done after registration)
+// document.body.appendChild(
+//   new MyVueElement({
+//     // initial props (optional)
+//   })
+// )
 
 </script>
 
 <style>
-#demo {
-  width: 100vw;
-  height: 100vh;
-}
 
-.movearea {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  padding: 6vmin;
-  transition: 0.2s background-color ease;
-}
 </style>
